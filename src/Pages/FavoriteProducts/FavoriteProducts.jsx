@@ -5,19 +5,29 @@ import { Link } from "react-router-dom";
 import { LiaTimesSolid } from 'react-icons/lia';
 import { HiHome } from "react-icons/hi2";
 import Swal from "sweetalert2";
+import { useContext } from "react";
+import { AuthContext } from "../../Provider/AuthProvider";
 const TABLE_HEAD = ["PRODUCT IMAGE", "PRODUCT NAME", "UNIT PRICE", "REMOVE","ADD"];
  
 const FavoriteProducts = () => {
-    const {data:products=[],isLoading,refetch } = useQuery({
-        queryKey: ['favoriteProducts'],
-        queryFn: async () => {
-            const res = await axios.get('http://localhost:5000/favoriteProducts')
-            return res.data
-        }
-    })
+  const {user}=useContext(AuthContext)
+  const { data: products = [], isLoading, isError, refetch } = useQuery({
+    queryKey: ['favoriteProducts'],
+    queryFn: async () => {
+      try {
+        const res = await axios.get(`https://bata-server.vercel.app/favoriteProducts?email=${user?.email}`);
+        return res.data;
+      } catch (error) {
+        console.error("Error fetching favorite products:", error);
+        throw new Error("Error fetching favorite products");
+      }
+    },
+    staleTime: 60000,  
+    retry: 2,  
+  });
 
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:5000/favoriteProducts/${id}`)
+    axios.delete(`https://bata-server.vercel.app/favoriteProducts/${id}`)
       .then(data => {
         if (data.data.deletedCount > 0) {
           refetch()
@@ -31,13 +41,16 @@ const FavoriteProducts = () => {
       }
     })
       }
-     {if (isLoading) {
-            return <Spinner className="h-16 w-16 text-blue-600 mx-auto mt-20 mb-20" />
+      if (isLoading) {
+        return <Spinner className="h-16 w-16 text-blue-600 mx-auto mt-20 mb-20" />
   }
+  if (isError) {
+    return <div>Error: {isError.message}</div>;
   }
   const array = {
     u:">"
   }
+  refetch()
     return (
         <>
         {
@@ -52,7 +65,7 @@ const FavoriteProducts = () => {
         <table className="w-full min-w-max table-auto bg-gray-400 text-left">
           <thead>
             <tr>
-              {TABLE_HEAD.map((head) => (
+              {TABLE_HEAD?.map((head) => (
                 <th
                   key={head}
                   className="bg-gray-200 pt-6 text-center pb-1"
@@ -108,10 +121,10 @@ const FavoriteProducts = () => {
         </table>
       </Card>
             </div> : <>
-            <Card className="mt-10 mb-20 w-4/6 mx-auto p-10">
+            <Card className="mt-10 mb-20 w-full shadow-none mx-auto p-10">
                             <p className="text-2xl font-bold mb-1">My Favorite Products (0)</p>  
                      <hr />       
-                <div className="p-20 mx-auto">
+                <div className="p-5 md:p-20 mx-auto">
                  <img src="https://www.pickaboo.com/_next/static/images/empry-cart-17e583c2859b7c0951bb12abb2e6808f.svg" alt="" />  
                 <p className="text-orange-600 text-2xl mt-10 text-center mb-1">Your Favorite products is empty</p> 
                 <p className="text-center">Looks like you haven’t added anything to your cart yet</p>    

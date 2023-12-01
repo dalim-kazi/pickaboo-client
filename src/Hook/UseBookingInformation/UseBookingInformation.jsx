@@ -10,7 +10,7 @@ const UseBookingInformation = () => {
     const { data: bookingInformation={} ,refetch} = useQuery({
         queryKey: ['bookingInformation',user?.email],
         queryFn: async () => {
-            const res = await axios.get(`http://localhost:5000/bookingInformation?email=${user?.email}`)
+            const res = await axios.get(`https://bata-server.vercel.app/bookingInformation?email=${user?.email}`)
             return res.data
         }
     })

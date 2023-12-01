@@ -24,7 +24,7 @@ const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault()
     const searchValue = e.target.search.value 
-    axios.get(`http://localhost:5000/search/api?value=${searchValue}`)
+    axios.get(`https://bata-server.vercel.app/search/api?value=${searchValue}`)
       .then(data => {
           const products = data.data
           handleSearchProducts(products)
@@ -115,8 +115,9 @@ const Header = () => {
                         size='sm'
                          className="flex items-center gap-2"
                        >
-                      <CgProfile />
-                      My Profile 
+                        <CgProfile />
+                        <Link to={'/profile'}> My Profile </Link>
+                     
                      </Typography></Link>
                      </MenuItem>
                             {

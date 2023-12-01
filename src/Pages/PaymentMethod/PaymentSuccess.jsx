@@ -10,7 +10,7 @@ const PaymentSuccess = () => {
     const query = new URLSearchParams(location.search)
     const transitionId = query.get('transitionId')
     if (transitionId) {
-        axios.delete(`http://localhost:5000/cartProducts?email=${user?.email}`)
+        axios.delete(`https://bata-server.vercel.app/cartProducts?email=${user?.email}`)
     }
     return (
         <div className="w-96 mx-auto mt-32">

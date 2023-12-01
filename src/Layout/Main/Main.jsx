@@ -5,7 +5,7 @@ import Footer from "../../Sherad/Footer/Footer";
 const Main = () => {
     const location  =useLocation()
     const singUpAndSingIn = location.pathname.includes('login') || location.pathname.includes("register")||location.pathname.includes('payment/success') || location.pathname.includes('payment/fail')
-    const isPathName =location.pathname.includes('bookingInformation')||location.pathname.includes('favoriteProducts')||location.pathname.includes('addToCartView')
+    const isPathName =location.pathname.includes('bookingInformation')||location.pathname.includes('favoriteProducts')||location.pathname.includes('addToCartView') ||location.pathname.includes('profile')
     return (
         <>
            {singUpAndSingIn || <Header></Header>}

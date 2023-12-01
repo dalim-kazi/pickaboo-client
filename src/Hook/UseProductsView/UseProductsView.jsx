@@ -8,7 +8,7 @@ const UseProductsView = () => {
     const {data:viewProducts=[],refetch} = useQuery({
         queryKey: [user?.email,'viewProducts'],
         queryFn: async () => {
-            const res = await axios.get(`http://localhost:5000/viewProducts?email=${user?.email}`,)
+            const res = await axios.get(`https://bata-server.vercel.app/viewProducts?email=${user?.email}`,)
             return res.data
         }
     })

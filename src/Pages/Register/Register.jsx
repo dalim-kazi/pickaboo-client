@@ -9,23 +9,19 @@ import {
 
 import login from '../../assets/login/Vecteezy-Newnormalactivity-WFH_BK1120.jpg'
 import { useForm } from "react-hook-form";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
 import { useContext } from "react";
-import axios from "axios";
-import Swal from "sweetalert2";
+ 
 const Register = () => {
-  const {createAccountEmailAndPassword,updateYourProfile}=useContext(AuthContext)
+  const {createAccountEmailAndPassword,updateYourProfile,emailVerify,logOut}=useContext(AuthContext)
   const { register, handleSubmit,reset, formState: { errors } } = useForm()
   const image_Api = import.meta.env.VITE_image_Api 
   const Navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
   const onSubmit = (data) => {
     const image = data.file[0]
     const imageForm = new FormData() 
     imageForm.append('image', image)
-    console.log(imageForm)
     const url = `https://api.imgbb.com/1/upload?key=${image_Api}`
     fetch(url, {
       method: "POST",
@@ -35,30 +31,21 @@ const Register = () => {
       .then(imgData => {
         const URL = imgData.data.url 
         createAccountEmailAndPassword(data.email, data.password)
-      .then(() => {
-        updateYourProfile(data.name,URL)
-          .then(() => {
-            const userInfo = {
-              name: data.name,
-              email: data.email,
-              image:imgData.data.url 
-            }
-            axios.post('http://localhost:5000/users', userInfo)
-              .then(data => {
-                if (data.data.insertedId) {
-                  reset()
-                  Navigate(from, { replace: true })
-                  Swal.fire({
-                    position: 'top-center',
-                    icon: 'success',
-                    title: 'successful create your account',
-                    showConfirmButton: false,
-                    timer: 1500
-                  })
-              }
+          .then((result) => {
+            const user = result.user 
+            console.log(user)
+          updateYourProfile(data.name,URL)
+            .then(() => {
+              emailVerify()
+                .then(() => {
+                reset()
+                logOut()
+               .then(() => {
+               Navigate('/login')
+             })
+                })
             })
-          })
-    })
+      })
     })
     
   }
@@ -72,12 +59,17 @@ const Register = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
         <CardBody className="flex flex-col gap-4">
           <h1 className="text-2xl text-center ">Sing Up</h1>
-              <Input label="name" size="lg" {...register("name", { required: true })} />
+              <Input label="name" type="text" size="lg" {...register("name", { required: true })} />
                 {errors.name && <span className="text-red-600">This field is required</span>}
-                <Input label="Email" size="lg" {...register("email", { required: true })} />
+                <Input label="Email" type="email" size="lg" {...register("email", { required: true })} />
               {errors.email && <span className="text-red-600">This field is required</span>}
-              <Input label="Password" size="lg" {...register("password", { required: true })} />
-                {errors.password && <span className="text-red-600">This field is required</span>}
+                <Input label="Password" type="password" size="lg" {...register("password", {
+                  required: true,
+                  minLength:8,
+                  pattern:  /^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z])/ 
+              
+                })} />
+       {errors.password && <span className="text-red-600">8 characters,2 Upper Case,1 Special Character,2 numerals,3 Lower Case</span>}
                 <Input type="file"  {...register("file", { required: true })} />
                 {errors.file && <span className="text-red-600">This field is required</span>}
         <div className="-ml-2.5">
@@ -86,7 +78,7 @@ const Register = () => {
         </div>
       </CardBody>
       <CardFooter className="pt-0">
-      <Input  variant="outlined" type="submit"  value={"Registration"}  className="!border !border-blue-300 cursor-pointer bg-white text-gray-900 shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"  labelProps={{
+      <Input  variant="outlined" type="submit"  value={"Registration"}  className="!border !border-blue-300 cursor-pointer !bg-blue-600 text-white shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"  labelProps={{
           className: "hidden",
         }}/>
         <Typography variant="small" className="mt-6 flex justify-center">

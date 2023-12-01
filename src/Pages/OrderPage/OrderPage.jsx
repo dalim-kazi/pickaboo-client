@@ -9,19 +9,19 @@ const OrderPage = () => {
     return (
     <>
     {
-     orders?.length>0? <Card className="rounded-none shadow-none w-4/6 mx-auto mb-10">
+     orders?.length>0? <Card className="rounded-none shadow-none md:w-4/6 mx-auto mb-10">
     <p className="text-[1.4rem] mt-10 m-5">Orders Products Summary</p>                          
      {
      orders?.map(items => <div key={items._id} className="border-[1rem] mb-5 rounded-md">
-      <div className="flex justify-between border-b-2 py-5 m-5">
-    <p><span className="text-xl text-orange-600">Order#</span>{items?.transitionId}</p>
+      <div className="md:flex justify-between border-b-2 py-5 m-5">
+    <p><span className="text-xl text-orange-600 mx-1">Order#</span>{items?.transitionId}</p>
     <p>{items?.displayDate}</p>
      <Button size="sm" className=" bg-orange-600 rounded-md">Order Place</Button>
     </div>
      {items?.products?.map(item => <div key={item?._id}>
                                     
-      <div className="flex justify-between m-5">
-      <div className="border-2 rounded-lg"> <img className="w-32 h-32" src={item?.  image} alt="" /></div>
+      <div className="md:flex justify-between m-5 gap-2">
+      <div className="rounded-lg"> <img className="w-32 h-32" src={item?.  image} alt="" /></div>
       <div>
      <p>{item?.tittle}</p>
      <p>Brand : {item?.brand}</p>
@@ -38,16 +38,16 @@ const OrderPage = () => {
             <p className="text-xl text-orange-600">৳{items?.totalPrice}</p>
          </div>
             <div>
-             <p className="text-2xl mx-24 mb-2">Address</p>
-        <div className="flex justify-between mx-20">
-        <div className="bg-gray-100 px-10 py-5 mb-5 rounded-lg">
+             <p className="text-2xl mx-10 lg:mx-24 mb-2">Address</p>
+        <div className="lg:flex justify-between lg:mx-20 mx-5">
+        <div className="bg-gray-100 px-5 lg:px-10 py-5 mb-5 rounded-lg">
         <p className="text-xl mb-2">Billing Address</p>
          <p>{items?.bookingInformation?.firstName} {items?.bookingInformation?.lastName}</p>
         <p>{items?.bookingInformation?.number}</p>
         <p>{items?.bookingInformation?.email}</p>
          <p>{items?.bookingInformation?.country},{items?.bookingInformation?.division},{items?.bookingInformation?.city},{items?.bookingInformation?.thana}</p>
             </div>
-            <div className="bg-gray-100 px-10 py-5 mb-5 rounded-lg">
+            <div className="bg-gray-100 px-5 lg:px-10 py-5 mb-5 rounded-lg">
         <p className="text-xl mb-2">Shipping Address</p>
          <p>{items?.bookingInformation?.firstName} {items?.bookingInformation?.lastName}</p>
         <p>{items?.bookingInformation?.number}</p>
@@ -59,10 +59,10 @@ const OrderPage = () => {
         </div>)
            }
         </Card> : <>
-                 <Card className="mt-10 mb-20 w-4/6 mx-auto p-10">
+                 <Card className="mt-10 mb-20 w-full shadow-none mx-auto p-10">
                             <p className="text-2xl font-bold mb-1">My Order products (0)</p>  
                      <hr />       
-                <div className="p-20 mx-auto">
+                <div className="p-5 md:p-20 mx-auto">
                  <img src="https://www.pickaboo.com/_next/static/images/empry-cart-17e583c2859b7c0951bb12abb2e6808f.svg" alt="" />  
                 <p className="text-orange-600 text-2xl mt-10 text-center">Your Orders is empty</p> 
                 <p className="text-center">Looks like you haven’t added anything to your cart yet</p>    

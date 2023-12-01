@@ -137,7 +137,7 @@ const AdminHome = () => {
                     <p className="text-2xl font-extrabold">{allDetails?.totalReview}</p>
                 </div>
             </div>  
-            <div className="grid lg:grid-cols-3 mt-20 items-center lg:gap-20">
+            <div className="grid lg:grid-cols-3 mt-20 items-center lg:gap-10">
                 <div className="col-span-2">
             <BarChart
               className="w-4/6"

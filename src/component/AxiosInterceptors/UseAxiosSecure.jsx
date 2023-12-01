@@ -10,7 +10,7 @@ const UseAxiosSecure = () => {
     const { logOut } =useContext(AuthContext)
     const Navigate = useNavigate()
     const axiosSecure = axios.create({
-        baseURL: 'http://localhost:5000'
+        baseURL: 'https://bata-server.vercel.app'
     });
     useEffect(() => {
         axiosSecure.interceptors.request.use( (config)=> {

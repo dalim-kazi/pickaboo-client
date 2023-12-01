@@ -7,7 +7,7 @@ import ProductsCard from "../ProductsCard/ProductsCard";
 const SearchProducts = () => {
     const { searchProducts ,loading} = useContext(AuthContext)
     if (loading) {
-        return <Spinner className="h-16 w-16 text-blue-600 mx-auto mt-80" />
+        return <Spinner className="h-16 w-16 text-blue-600 mx-auto mt-20 mb-80" />
     }
     return (
         <>

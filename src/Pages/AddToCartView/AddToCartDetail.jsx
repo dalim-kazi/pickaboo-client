@@ -1,5 +1,5 @@
 import UseAddToCart from "../../Hook/UseAddToCart/UseAddToCart";
-import { Button, Input } from "@material-tailwind/react";
+import { Input, Spinner } from "@material-tailwind/react";
 import axios from "axios";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
@@ -12,7 +12,7 @@ import UseBookingInformation from "../../Hook/UseBookingInformation/UseBookingIn
 
  
 const AddToCartDetail = () => {
-    const [cartProducts] = UseAddToCart()
+    const [cartProducts,, isLoading, isError] = UseAddToCart()
     const [bookingInformation]=UseBookingInformation()
     const { user } = useContext(AuthContext)
     const Navigate =useNavigate()
@@ -21,7 +21,7 @@ const AddToCartDetail = () => {
   const { register,handleSubmit} = useForm()
     
     const onSubmit = (data) => {
-        axios.delete(`http://localhost:5000/bookingInformation?email=${user?.email}`)
+        axios.delete(`https://bata-server.vercel.app/bookingInformation?email=${user?.email}`)
         const bookingInformation = {
             email:user.email,
             number: data.mobileNumber,
@@ -33,7 +33,7 @@ const AddToCartDetail = () => {
             thana: data.thana,
             postCode: data.postCode,
         }
-        axios.post('http://localhost:5000/bookingInformation', bookingInformation)
+        axios.post('https://bata-server.vercel.app/bookingInformation', bookingInformation)
             .then(data => {
                 if (data.data.insertedId) {
                     Swal.fire({
@@ -47,23 +47,30 @@ const AddToCartDetail = () => {
             }
             })
     }
+    if (isLoading) {
+        return <Spinner className="h-16 w-16 text-blue-600 mx-auto mt-10 mb-52" />;
+      }
+    
+      if (isError) {
+        return <div>Error: {isError.message}</div>;
+      }
     return (
-        <div className="md:flex md:flex-row-reverse md:w-4/6 w-11/12 gap-10 mx-auto">
-        <div className="md:w-1/2 text-center mb-32">
+        <div className="lg:flex lg:flex-row-reverse lg:w-full laptop:w-4/5 w-full gap-10 mx-auto px-1 lg:px-8 ">
+        <div className="lg:w-1/2 text-center mb-32 pr-2">
             <div className="mt-10">
                 <img src="https://images.prothomalo.com/prothomalo-bangla%2F2022-01%2F21b894f9-5c0d-4513-be40-f813b222deb8%2Fgm_696973d1_5abe_4e2a_824a_54906e71068a_10_returnsomething_bought_online.jpg?rect=83%2C0%2C1854%2C1043&auto=format%2Ccompress&fmt=webp&format=webp&w=900&dpr=1.3" alt="" /> 
             </div> 
              
             {
                 cartProducts?.map(item=><div key={item._id}>
-                    <div className="flex justify-between items-center mt-5">
+                    <div className="flex justify-between items-center mt-5 m-3">
                 <div className="flex items-center text-start gap-3">
                     <div className="w-28 h-28 border-2 rounded-lg bg-blue-gray-400 relative">
                                 <img className="w-full h-full" src={item?.image} alt="" />
                                 <p className="absolute -top-2 -right-2 text-white w-6 h-6 rounded-full bg-gray-600"><span className="pl-2">{item?.quantity}</span></p>
                             </div>
                             
-                    <div className="w-48">
+                    <div className=" w-40 md:w-48">
                         <p>{item?.tittle?.slice(0,40)}...</p> 
                         <p> <span>{item?.productSize}</span>/<span>{item?.color}</span>/<span>{item?.brand}</span></p>
                    </div>
@@ -90,7 +97,7 @@ const AddToCartDetail = () => {
                 <p className="text-md">TK. {totalPrice}</p>
                     </div>
         </div>
-        <div className="md:w-1/2 md:border-r-2 pr-10">
+        <div className="lg:w-1/2 md:border-r-2 lg:pr-5">
             <p className="text-2xl text-blue-600 text-center mt-10 mb-10">Pickaboo</p>
             <div className="mb-5">
                 <p className="text-lg">Contact</p>
@@ -118,15 +125,18 @@ const AddToCartDetail = () => {
                     <div>
                         <p>	I have read and agreed to the website <Link className="text-blue-600" to={"/terms-and-condition"}>terms and conditions</Link></p>
                     </div>
-                    <div className="flex justify-between mb-10 mt-5">
-                        <Link to={`/sidePages/men`} className="text-blue-600">Return to Cart</Link>
-                       
-                        <Button size="sm" className="bg-blue-600 rounded-5 "><Input type="submit"
+                    <div className="grid grid-cols-2 justify-between mb-10 mt-5">
+                        <Link to={`/addToCartView`} className="text-blue-600">Return to Cart</Link>
+                       <Input type="submit"
                           value={'Shopping Continue'}
-                          color="blue"
+                           color="blue"
                             size="sm"
-                            className="bg-blue-500 border-none border-t-none text-white cursor-pointer"
-                         outline/> </Button> 
+                            className="!border !border-gray-300 !bg-blue-600 text-white shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10 cursor-pointer"
+        labelProps={{
+          className: "hidden",
+        }}
+        containerProps={{ className: "min-w-[80px]" }}
+                         /> 
                     </div>
                 
             </div>

@@ -1,17 +1,19 @@
-import { Button, Checkbox } from "@material-tailwind/react";
+import { Button, Checkbox, Spinner } from "@material-tailwind/react";
 import UseBookingInformation from "../../Hook/UseBookingInformation/UseBookingInformation";
 import { useState } from "react";
 import { Link} from "react-router-dom";
 import axios from "axios";
 import DateAndTime from "../../component/DateAndTime/DateAndTime";
   
-const BookingDetails = ({products,email}) => {
-    const [displayDate]=DateAndTime()
+const BookingDetails = ({products,email,isLoading,isError}) => {
+    const [displayDate] = DateAndTime()
+    const [loading,setLoading]=useState(false)
     const [bookingInformation] = UseBookingInformation()
     const [bookingMethod, setBookingMethod] = useState()
     
     const totalPrice = products?.reduce((accumulator, currentValue) => accumulator + currentValue.subtotal, 0)
     const handleUpdate = (e) => {
+        setLoading(true)
         e.preventDefault()
         const currency =e.target.currency.value
         if (bookingMethod && currency) {
@@ -25,16 +27,25 @@ const BookingDetails = ({products,email}) => {
                 bookingInformation:bookingInformation
             }
             console.log(bookings)
-            axios.post('http://localhost:5000/bookings', bookings)
+            axios.post('https://bata-server.vercel.app/bookings', bookings)
                 .then(data => {
+                    setLoading(false)
                     window.location.replace(data.data.url)
                console.log(data) 
             })
         }
     }
+    if (isLoading) {
+        <Spinner className="h-16 w-16 text-blue-600 mx-auto mt-10 mb-52" />
+    }
+    if (isError) {
+        if (isError) {
+            return <div> {isError.message}</div>;
+          }
+    }
     return (
-        <div className="md:flex md:flex-row-reverse md:w-4/6 w-11/12 gap-10 mx-auto">
-        <div className="md:w-1/2 text-center mb-32">
+        <div className="lg:flex lg:flex-row-reverse w-full  lg:w-5/6 px-2 md:px-10 lg:px-0 gap-10 lg:mx-auto">
+        <div className="lg:w-1/2 text-center mb-32">
             <div className="mt-10">
                 <img src="https://images.prothomalo.com/prothomalo-bangla%2F2022-01%2F21b894f9-5c0d-4513-be40-f813b222deb8%2Fgm_696973d1_5abe_4e2a_824a_54906e71068a_10_returnsomething_bought_online.jpg?rect=83%2C0%2C1854%2C1043&auto=format%2Ccompress&fmt=webp&format=webp&w=900&dpr=1.3" alt="" /> 
             </div> 
@@ -44,11 +55,11 @@ const BookingDetails = ({products,email}) => {
                     <div className="flex justify-between items-center mt-5">
                 <div className="flex items-center text-start gap-3">
                     <div className="w-28 h-28 border-2 rounded-lg bg-blue-gray-400 relative">
-                                <img className="w-full h-full" src={item?.image} alt="" />
-                                <p className="absolute -top-2 -right-2 text-white w-6 h-6 rounded-full bg-gray-600"><span className="pl-2">{item?.quantity}</span></p>
-                            </div>
+                        <img className="w-full h-full" src={item?.image} alt="" />
+                        <p className="absolute -top-2 -right-2 text-white w-6 h-6 rounded-full bg-gray-600"><span className="pl-2">{item?.quantity}</span></p>
+                    </div>
                             
-                    <div className="w-48">
+                    <div className="w-40 md:w-48">
                         <p>{item?.tittle?.slice(0,40)}...</p> 
                         <p> <span>{item?.size}</span>/<span>{item?.color}</span>/<span>{item?.brand}</span></p>
                    </div>
@@ -76,7 +87,7 @@ const BookingDetails = ({products,email}) => {
                 <p className="text-md">TK. {totalPrice}</p>
                     </div>
         </div>
-        <div className="md:w-1/2 md:border-r-2 pr-10">
+        <div className="lg:w-1/2 md:border-r-2 md:pr-10">
             <p className="text-2xl text-blue-600 text-center mt-10 mb-10">Pickaboo</p>
             <div className="mb-5">
                 <p className="text-lg">Your Information</p>
@@ -122,7 +133,7 @@ const BookingDetails = ({products,email}) => {
                    </div>
                 <div className="flex justify-between mt-5 mb-5">
                     <Link className="text-blue-600 underline" to={'/addToCartDetail'}>Return to information</Link>
-                    <Button type="submit" className="bg-blue-600">Conform Order</Button>
+                    <Button disabled={loading} type="submit" className="bg-blue-600">Conform Order</Button>
             </div>
                </form>
             </div>

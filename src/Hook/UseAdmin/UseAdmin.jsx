@@ -9,7 +9,7 @@ const UseAdmin = () => {
     const { data: isAdmin={},isLoading } = useQuery({
         queryKey: [user?.email,'users/admin'],
         queryFn: async () => {
-            const res = await axios.get(`http://localhost:5000/users/admin?email=${user?.email}`)
+            const res = await axios.get(`https://bata-server.vercel.app/users/admin?email=${user?.email}`)
             return res.data.admin
         }
     })

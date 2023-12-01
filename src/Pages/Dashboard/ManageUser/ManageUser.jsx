@@ -21,7 +21,7 @@ const ManageUser = () => {
         confirmButtonText: "User is a admin"
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.patch(`http://localhost:5000/users/method/${id}`,{admin:'admin'})
+          axios.patch(`https://bata-server.vercel.app/users/method/${id}`,{admin:'admin'})
           .then(data => {
             if (data.data.modifiedCount>0) {
               refetch()
@@ -51,7 +51,7 @@ const ManageUser = () => {
         confirmButtonText: "User is a seller"
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.patch(`http://localhost:5000/users/method/${id}`,{admin:'seller'})
+          axios.patch(`https://bata-server.vercel.app/users/method/${id}`,{admin:'seller'})
           .then(data => {
             if (data.data.modifiedCount>0) {
               refetch()
@@ -81,7 +81,7 @@ const ManageUser = () => {
         confirmButtonText: "User is a admin"
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.delete(`http://localhost:5000/users/${id}`)
+          axios.delete(`https://bata-server.vercel.app/users/${id}`)
             .then(data => {
             if (data.data.deletedCount>0) {
               refetch()

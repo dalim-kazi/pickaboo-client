@@ -12,7 +12,7 @@ import ProvideCustomChat from "../../../component/ProvideCustomChat/ProvideCusto
 const Home = () => {
     return (
         <div>
-           <div>
+           
            <Banner></Banner>
             <div className="md:mx-20 mx-5">
                 <Category></Category>
@@ -23,7 +23,6 @@ const Home = () => {
                 <SpecialProductsBanner></SpecialProductsBanner>
                 <BestSeller></BestSeller>
                 <PickFavoriteProducts></PickFavoriteProducts>
-            </div>
             </div>
             <ProvideCustomChat></ProvideCustomChat>
         </div>

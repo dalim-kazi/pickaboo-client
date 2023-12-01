@@ -11,11 +11,12 @@ import axios from "axios";
  
 
  
-const ProductsOverView = ({products}) => {
+const ProductsOverView = ({products, refetch}) => {
   
   const {user}=useContext(AuthContext)
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen((cur) => !cur);
+  const [open, setOpen] = useState(false);
+  const [loading,setLoading]=useState(false)
+  const handleOpen = () => setOpen((cur) => !cur);
   const { tittle, brand, color, Size, image, details, price, price2, _id } = products
   const [activeImage, setActiveImage] = useState(image[0])
   const [productSize, setProductSize] = useState()
@@ -77,41 +78,48 @@ const ProductsOverView = ({products}) => {
     const textField = document.getElementById("value-field") 
     const quantityText = textField.innerText;
     if (user) {
-      axios.delete(`http://localhost:5000/viewProducts?email=${user?.email}`)
-    }
-    const viewProducts  = {
-      productsId:_id,
-      email:user?.email,
-      buySystem:"buy", 
-      tittle,
-      price,
-      subtotal: parseFloat(subtotalTextValue),
-      image: image[0],
-      color,
-      brand,
-      productSize,
-      quantity:parseFloat(quantityText)
-    }
-    if (user) {
-      
       if (productSize) {
-        axios.post('http://localhost:5000/viewProducts', viewProducts)
+        setLoading(true)
+      axios.delete(`https://bata-server.vercel.app/viewProducts?email=${user?.email}`)
       .then(data => {
-        if (data.data.insertedId) {
+        if (data.data.acknowledged){
+          refetch()
           console.log(data)
-        } 
-        
+          const viewProducts  = {
+            productsId:_id,
+            email:user?.email,
+            buySystem:"buy", 
+            tittle,
+            price,
+            subtotal: parseFloat(subtotalTextValue),
+            image: image[0],
+            color,
+            brand,
+            productSize,
+            quantity:parseFloat(quantityText)
+        }
+          axios.post('https://bata-server.vercel.app/viewProducts', viewProducts)
+        .then(data => {
+          if (data.data.insertedId) {
+            console.log(data)
+             setLoading(false)
+          } 
+          
+        })
+            .catch(error => {
+              return <div>{error}</div>
+            })
+            navigate('/productsOverViewDetails')
+        }
       })
-      navigate('/productsOverViewDetails')
-     }
-  
+      }
       else {
         Swal.fire({
           icon:"error",
          text:"please select your products size"
        })
       }
-  }
+    }
     else {
       Swal.fire({
         title: 'Are you sure?',
@@ -129,7 +137,6 @@ const ProductsOverView = ({products}) => {
     }
     
   }
-
   const handleAddToCartProducts = () => {
       const viewProducts  = {
         productsId:_id,
@@ -144,13 +151,13 @@ const ProductsOverView = ({products}) => {
     }
      
     if (user) {
-      axios.post('http://localhost:5000/cartProducts', viewProducts)
+      axios.post('https://bata-server.vercel.app/cartProducts', viewProducts)
       .then(data => {
         if (data.data.insertedId) {
           Swal.fire({
             position: 'top-center',
             icon: 'success',
-            title: 'Your work has been saved',
+            title: 'your products add to cart',
             showConfirmButton: false,
             timer: 1500
           })
@@ -188,13 +195,13 @@ const ProductsOverView = ({products}) => {
     }
    
     if (user) {
-      axios.post('http://localhost:5000/favoriteProducts', favoriteProducts)
+      axios.post('https://bata-server.vercel.app/favoriteProducts', favoriteProducts)
         .then(data => {
           if (data.data.insertedId) {
             Swal.fire({
               position: 'top-center',
               icon: 'success',
-              title: 'Your work has been saved',
+              title: 'Add to favorite cart',
               showConfirmButton: false,
               timer: 1500
             })
@@ -377,7 +384,7 @@ const ProductsOverView = ({products}) => {
                           <Button onClick={handleAddToCartProducts} className="rounded-none w-7/12 hover:bg-red-600">ADD TO CART</Button>
                           <IconButton onClick={handleAddToFavoriteProducts} variant="outlined" size="md" className="rounded-md ml-3  hover:bg-black hover:text-white"><FaRegHeart className="text-xl"></FaRegHeart></IconButton>
                       </div>
-                       <Button onClick={handleBuyProducts} variant="outlined" className="rounded-none w-4/6 hover:bg-black hover:text-white">BUY NOW</Button>
+                       <Button disabled={loading} onClick={handleBuyProducts} variant="outlined" className="rounded-none w-4/6 hover:bg-black hover:text-white">BUY NOW</Button>
                   </div>
           </div>
           <div className="mt-20 border-t-2">

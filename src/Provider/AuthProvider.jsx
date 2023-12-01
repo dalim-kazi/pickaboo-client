@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
+import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 import { app } from "../Firebase/Firebase.Config";
 import axios from "axios";
  
@@ -35,7 +35,12 @@ const AuthProvider = ({ children }) => {
         setLoading(true)
         return signOut(auth)
     }
- 
+    const emailVerify = () => {
+        return sendEmailVerification(auth.currentUser)
+    }
+    const passwordForget = (email) => {
+     return sendPasswordResetEmail(auth,email)
+ }
     const handleSearchProducts = (text) => {
         setSearchProducts(text)
   }
@@ -44,7 +49,7 @@ const AuthProvider = ({ children }) => {
         const unsubscribe = onAuthStateChanged(auth, currentUser => {
             setUser(currentUser) 
             if (currentUser) {
-                axios.post(`http://localhost:5000/jwt`, { email: currentUser.email })
+                axios.post(`https://bata-server.vercel.app/jwt`, { email: currentUser.email })
                     .then(data => {
                         const token =data.data.token
                         localStorage.setItem("accessToken",token)
@@ -66,7 +71,9 @@ const AuthProvider = ({ children }) => {
         updateYourProfile,
         googleSinUp,
         logOut,
-       handleSearchProducts,
+        handleSearchProducts,
+        emailVerify,
+       passwordForget,
        searchProducts
    }
     return (

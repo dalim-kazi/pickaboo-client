@@ -2,7 +2,7 @@ import { FaAngleRight } from "react-icons/fa";
 import { HiHome } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 import UseAddToCart from "../../Hook/UseAddToCart/UseAddToCart";
-import { Button, Card, IconButton,} from "@material-tailwind/react";
+import { Button, Card, IconButton, Spinner,} from "@material-tailwind/react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useContext, useState } from "react";
@@ -11,7 +11,7 @@ import { AuthContext } from "../../Provider/AuthProvider";
 
 const AddToCartView = () => {
     const {user}=useContext(AuthContext)
-    const [cartProducts, refetch] = UseAddToCart()
+    const [cartProducts, refetch, isLoading, isError] = UseAddToCart()
      const [productSize,setProductSize]=useState('')
     const [itemQuantities, setItemQuantities] = useState({});
      
@@ -50,7 +50,7 @@ const AddToCartView = () => {
         return subtotal;
     }
     const handleDelete = (id) => {
-        axios.delete(`http://localhost:5000/cartProducts/${id}`)
+        axios.delete(`https://bata-server.vercel.app/cartProducts/${id}`)
         .then(data => {
             if (data.data.deletedCount > 0) {
                 refetch()
@@ -82,24 +82,42 @@ const AddToCartView = () => {
             productSize:productSize
         }
         
-        axios.put('http://localhost:5000/cartProducts', productsInfo)
-            .then((data => {
-                if (data.data.matchedCount > 0) {
-                    refetch()
-                    
-                    Swal.fire({
-                        position: 'top-center',
-                        icon: 'success',
-                        title: 'Item update from the cart',
-                        showConfirmButton: false,
-                        timer: 1500
-                      })
-            }
-        }))
+       if (productSize) {
+        axios.put('https://bata-server.vercel.app/cartProducts', productsInfo)
+        .then((data => {
+            if (data.data.matchedCount > 0) {
+                refetch()
+                
+                Swal.fire({
+                    position: 'top-center',
+                    icon: 'success',
+                    title: 'Item update from the cart',
+                    showConfirmButton: false,
+                    timer: 2500
+                  })
+        }
+    }))
+        }
+       else {
+        Swal.fire({
+            position: 'top-center',
+            icon: 'success',
+            title: 'please add your products size',
+            showConfirmButton: false,
+            timer: 2500
+          })
+        }
              
             
      }
     
+     if (isLoading) {
+        return <Spinner className="h-16 w-16 text-blue-600 mx-auto mt-10 mb-52" />;
+      }
+    
+      if (isError) {
+        return <div>Error: {isError.message}</div>;
+      }
     return (
         <>
          {
@@ -156,7 +174,7 @@ const AddToCartView = () => {
                 <Card className="mt-10 mb-20 w-full h-full shadow-none mx-auto p-10">
                             <p className="text-2xl font-bold mb-1">My Cart Products (0)</p>  
                      <hr />       
-                <div className="p-20 mx-auto">
+                <div className="p-5 md:p-20 mx-auto">
                  <img src="https://www.pickaboo.com/_next/static/images/empry-cart-17e583c2859b7c0951bb12abb2e6808f.svg" alt="" />  
                 <p className="text-orange-600 text-2xl mt-10 text-center mb-1">Your Cart products is empty</p> 
                 <p className="text-center">Looks like you haven’t added anything to your cart yet</p>    

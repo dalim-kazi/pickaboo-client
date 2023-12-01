@@ -9,16 +9,16 @@ import Swal from "sweetalert2";
 
 const Cart = () => {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-    const [cartProducts,refetch]=UseAddToCart()
+    const [cartProducts,refetch,]=UseAddToCart()
     const handleDelete = (id) => {
-        axios.delete(`http://localhost:5000/cartProducts/${id}`)
+        axios.delete(`https://bata-server.vercel.app/cartProducts/${id}`)
             .then(data => {
                 if (data.data.deletedCount > 0) {
                     refetch()
                     Swal.fire({
                       position: 'top-center',
                       icon: 'success',
-                      title: 'Your work has been saved',
+                      title: 'delete your products',
                       showConfirmButton: false,
                       timer: 1500
                     })
@@ -26,6 +26,7 @@ const Cart = () => {
         })
   }
   refetch()
+   
     return (
         <React.Fragment>
       <Menu allowHover open={isMenuOpen} handler={setIsMenuOpen}>

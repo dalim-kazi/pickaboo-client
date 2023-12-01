@@ -56,15 +56,19 @@ import DashboardPages from "../Layout/Dashboard/DashboardPages";
 import ProductsCardPages from "../Pages/productsCardPages/ProductsCardPages";
 import ProductsViewBookingDetails from "../Pages/BookingDetails/ProductsViewBookingDetails";
 import CardBookingDetails from "../Pages/BookingDetails/CardBookingDetails";
-import PaymentSuccess from "../Pages/PaymentMethod/PaymentSuccess";
+ 
 import AdminRouter from "./AdminRouter";
 import OrderPage from "../Pages/OrderPage/OrderPage";
-import PaymentFail from "../Pages/PaymentMethod/PaymentFail";
+ 
 import ManageBookings from "../Pages/Dashboard/ManageBookings/ManageBookings";
 import ManageItems from "../Pages/Dashboard/ManageItems/ManageItems";
 import AddItem from "../Pages/Dashboard/AddItem/AddItem";
 import AdminHome from "../Pages/Dashboard/AdminHome/AdminHome";
 import SearchProducts from "../component/SearchProducts/SearchProducts";
+import PaymentSuccess from "../Pages/PaymentMethod/PaymentSuccess";
+import PaymentFail from "../Pages/PaymentMethod/PaymentFail";
+import Profile from "../Pages/Profile/Profile";
+ 
  
 
 export const Router = createBrowserRouter([
@@ -79,7 +83,6 @@ export const Router = createBrowserRouter([
             {
                 path: "/productsOverView/:id",
                 element: <ProductsCardPages></ProductsCardPages>,
-                loader:async({params})=>await fetch(`http://localhost:5000/products/${params.id}`)
             },
             {
                 path: "/productsOverViewDetails",
@@ -105,7 +108,6 @@ export const Router = createBrowserRouter([
             {
                 path: "/favoriteProductsView/:id",
                 element: <PrivateRouter><FavoriteProductsView></FavoriteProductsView></PrivateRouter>,
-                loader:async({params})=>await fetch(`http://localhost:5000/favoriteProducts/${params.id}`)
             },
             {
                 path: "/addToCartView",
@@ -138,6 +140,10 @@ export const Router = createBrowserRouter([
             {
                 path: '/searchProducts',
                 element:<SearchProducts></SearchProducts>
+            },
+            {
+                path: "/profile",
+                element:<Profile></Profile>
             }
         ]
     },
