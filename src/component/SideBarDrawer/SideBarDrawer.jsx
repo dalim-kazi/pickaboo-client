@@ -9,7 +9,6 @@ const SideBarDrawer = () => {
     const openDrawer = () => setOpen(true);
     const closeDrawer = () => setOpen(false);
     const [open2, setOpen2] =useState(1);
-    
     const handleOpen = (value) => {
       setOpen2(open2 === value ? 0 : value);
     };
